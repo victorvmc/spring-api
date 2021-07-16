@@ -4,9 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +19,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "tb_client")
-public class Client implements Serializable {
+public class Client implements Serializable{
 
 //    TODO to study
     public static final long serialVersionUID = 1L;
@@ -27,8 +30,17 @@ public class Client implements Serializable {
     private Integer id;
     private String name;
     private String lastName;
+    @CreationTimestamp
+    private LocalDateTime created_at;
+    @UpdateTimestamp
+    private LocalDateTime updated_at;
 
-//    @OneToMany(mappedBy = "client")
-//    private List<Transfer> transfers;
+    public Client(String name, String lastName) {
+        this.name = name;
+        this.lastName = lastName;
+    }
+
+    @OneToMany(mappedBy = "client")
+    private List<Transfer> transfers;
 
 }

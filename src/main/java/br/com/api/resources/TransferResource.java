@@ -1,13 +1,15 @@
 package br.com.api.resources;
 
+import br.com.api.dto.inputs.TransferInputDTO;
 import br.com.api.models.Transfer;
-import br.com.api.repositories.TransferRepository;
+import br.com.api.services.implementation.TransferServiceImplementation;
+import br.com.api.services.mapper.TransferMapper;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @NoArgsConstructor
 @RestController
@@ -15,34 +17,32 @@ import java.util.Optional;
 public class TransferResource {
 
     @Autowired
-    private TransferRepository transferRepository;
+    private TransferServiceImplementation transferServiceImplementation;
+
+    @Autowired
+    private TransferMapper transferMapper;
 
     @PostMapping("/transfer")
-    public Transfer createTransfer(@RequestBody Transfer transfer) {
-        return transferRepository.save(transfer);
+    public ResponseEntity<Transfer> createTransfer(@RequestBody TransferInputDTO transferInputDTO) {
+
+        Transfer transfer = transferServiceImplementation.createTransfer(transferMapper.mapTransferDTOtoTransfer(transferInputDTO));
+
+        return ResponseEntity.accepted().body(transferServiceImplementation.createTransfer(transfer));
     }
 
     @GetMapping("/transfer")
-    public List<Transfer> readTransfer() {
-        return transferRepository.findAll();
+    public ResponseEntity<List<Transfer>> readTransfer() {
+
+        List<Transfer> transfers =  transferServiceImplementation.getTransfers();
+
+        return ResponseEntity.ok().body(transferServiceImplementation.getTransfers());
     }
 
-    @GetMapping("/transfer/{id}")
-    public Transfer readTransfer(@PathVariable("id") Integer id) {
-
-        Optional<Transfer> transfer = transferRepository.findById(id);
-
-        return transfer.orElse(null);
-    }
-
-    @PutMapping("/transfer")
-    public Transfer updateTransfer(@RequestBody Transfer transfer) {
-        return transferRepository.save(transfer);
-    }
-
-    @DeleteMapping("/transfer/{id}")
-    public void deleteTransfer(@PathVariable("id") Integer id) {
-        transferRepository.deleteById(id);
-    }
-
+//    @GetMapping("/transfer/{id}")
+//    public Transfer readTransfer(@PathVariable("id") Integer id) {
+//
+//        Optional<Transfer> transfer = transferRepository.findById(id);
+//
+//        return transfer.orElse(null);
+//    }
 }

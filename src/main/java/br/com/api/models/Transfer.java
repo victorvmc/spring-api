@@ -3,9 +3,13 @@ package br.com.api.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.engine.internal.Cascade;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -21,8 +25,18 @@ public class Transfer implements Serializable {
     private Integer id;
     private String currency;
     private double amount;
+    @CreationTimestamp
+    private LocalDateTime created_at;
+    @UpdateTimestamp
+    private LocalDateTime updated_at;
 
-//    @ManyToOne
-//    @JoinColumn(name = "client_id")
-//    private Client client;
+    @ManyToOne()
+    @JoinColumn(referencedColumnName = "id")
+    private Client client;
+
+    public Transfer(String currency, double amount, Client client) {
+        this.currency = currency;
+        this.amount = amount;
+        this.client = client;
+    }
 }
