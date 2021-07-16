@@ -4,6 +4,8 @@ import br.com.api.models.Client;
 import br.com.api.repositories.ClientRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
@@ -13,17 +15,20 @@ import java.util.Optional;
 @NoArgsConstructor
 @RestController
 @RequestMapping(value = "/api")
-public class ClientResource implements Serializable {
+public class ClientResource {
 
-    private static final long serialVersionUID = 1L;
     @Autowired
     private ClientRepository clientRepository;
 
     @PostMapping("/client")
-    public Client createClient(@RequestBody Client client) {
-        return clientRepository.save(client);
+    public ResponseEntity<Client> createClient(@RequestBody Client client) {
+
+        Client clientSaved = clientRepository.save(client);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientSaved) ;
     }
 
+//    TODO O body do responseentity e do list são diferentes
     @GetMapping("/clients")
     public List<Client> readClients() {
         return clientRepository.findAll();

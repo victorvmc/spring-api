@@ -18,7 +18,10 @@ import java.util.List;
 @Table(name = "tb_client")
 public class Client implements Serializable {
 
+//    TODO to study
     public static final long serialVersionUID = 1L;
+
+//    TODO add more atributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
