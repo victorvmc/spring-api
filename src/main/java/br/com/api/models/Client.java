@@ -1,5 +1,6 @@
 package br.com.api.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,7 +11,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -19,28 +19,33 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "tb_client")
-public class Client implements Serializable{
+public class Client implements Serializable {
 
-//    TODO to study
     public static final long serialVersionUID = 1L;
 
-//    TODO add more atributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String lastName;
     @CreationTimestamp
-    private LocalDateTime created_at;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
     @UpdateTimestamp
-    private LocalDateTime updated_at;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "client")
+//    @JsonManagedReference
+    private List<Transfer> transfers;
 
     public Client(String name, String lastName) {
         this.name = name;
         this.lastName = lastName;
     }
 
-    @OneToMany(mappedBy = "client")
-    private List<Transfer> transfers;
-
+    public Client(Integer id, String name, String lastName) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+    }
 }

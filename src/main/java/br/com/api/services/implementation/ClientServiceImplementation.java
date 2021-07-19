@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientServiceImplementation implements ClientService {
@@ -16,7 +17,7 @@ public class ClientServiceImplementation implements ClientService {
 
 
     @Override
-    public Client createClients(Client client) {
+    public Client createClient(Client client) {
         return clientRepository.save(client);
     }
 
@@ -24,4 +25,24 @@ public class ClientServiceImplementation implements ClientService {
     public List<Client> getClients() {
         return clientRepository.findAll();
     }
+
+    @Override
+    public Client getClienteById(Integer id) {
+        Optional<Client> client = clientRepository.findById(id);
+        return client.orElse(null);
+    }
+
+    @Override
+//    TODO É necessário criar esse método igual do create?
+//    TODO Tratamento de erro para não criar quando não existir
+    public Client updateClient(Client client) {
+        return clientRepository.save(client);
+    }
+
+    @Override
+    public void deleteClient(Integer id) {
+        clientRepository.deleteById(id);
+    }
+
+
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TransferServiceImplementation implements TransferService {
@@ -21,7 +22,12 @@ public class TransferServiceImplementation implements TransferService {
 
     @Override
     public List<Transfer> getTransfers() {
-
         return transferRepository.findAll();
+    }
+
+    @Override
+    public Transfer getTransferById(Integer id) {
+        Optional<Transfer> transfer = transferRepository.findById(id);
+        return transfer.orElse(null);
     }
 }

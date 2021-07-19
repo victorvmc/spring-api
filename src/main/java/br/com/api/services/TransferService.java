@@ -10,4 +10,6 @@ public interface TransferService {
 
     public List<Transfer> getTransfers();
 
+    public Transfer getTransferById(Integer id);
+
 }
