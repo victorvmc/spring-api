@@ -1,4 +1,4 @@
-package br.com.api.services.implementation;
+package br.com.api.services;
 
 import br.com.api.models.Client;
 import br.com.api.models.Transfer;

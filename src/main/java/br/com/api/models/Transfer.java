@@ -1,6 +1,6 @@
 package br.com.api.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import br.com.api.models.utils.Currency;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,7 +23,8 @@ public class Transfer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String currency;
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
     private double amount;
     @CreationTimestamp
     private LocalDateTime created_at;
@@ -35,8 +36,7 @@ public class Transfer implements Serializable {
 //    @JsonBackReference
     private Client client;
 
-    public Transfer(String currency, double amount, Client client) {
-
+    public Transfer(Currency currency, double amount, Client client) {
         this.currency = currency;
         this.amount = amount;
         this.client = client;

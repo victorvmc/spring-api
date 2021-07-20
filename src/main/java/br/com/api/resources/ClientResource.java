@@ -3,7 +3,7 @@ package br.com.api.resources;
 import br.com.api.dto.inputs.ClientInputDTO;
 import br.com.api.dto.outputs.ClientOutputDTO;
 import br.com.api.models.Client;
-import br.com.api.services.implementation.ClientService;
+import br.com.api.services.ClientService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

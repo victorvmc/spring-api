@@ -1,12 +1,14 @@
 package br.com.api.dto.outputs;
 
-import br.com.api.models.Client;
 import br.com.api.models.Transfer;
+import br.com.api.models.utils.Currency;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -16,8 +18,8 @@ import java.time.LocalDateTime;
 public class TransferOutputDTO implements Serializable {
 
     public static final long serialVersionUID = 1L;
-
-    private String currency;
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
     private Double amount;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime created_at;

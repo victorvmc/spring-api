@@ -1,10 +1,8 @@
-package br.com.api.services.implementation;
+package br.com.api.services;
 
 import br.com.api.models.Client;
 import br.com.api.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
