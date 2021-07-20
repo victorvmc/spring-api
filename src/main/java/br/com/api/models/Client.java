@@ -28,11 +28,11 @@ public class Client implements Serializable {
     private Integer id;
     private String name;
     private String lastName;
-    @CreationTimestamp
     @Column(name = "created_at")
+    @CreationTimestamp
     private LocalDateTime createdAt;
-    @UpdateTimestamp
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
     @OneToMany(mappedBy = "client")
 //    @JsonManagedReference
