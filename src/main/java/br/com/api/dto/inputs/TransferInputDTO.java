@@ -1,7 +1,7 @@
 package br.com.api.dto.inputs;
 
 import br.com.api.models.Client;
-import br.com.api.models.utils.Currency;
+import br.com.api.models.utils.CurrencyEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +19,7 @@ public class TransferInputDTO implements Serializable {
 
     private Integer id;
     @Enumerated(EnumType.STRING)
-    private Currency currency;
+    private CurrencyEnum currency;
     private Double amount;
     private Client client;
 

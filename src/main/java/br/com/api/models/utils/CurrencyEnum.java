@@ -1,6 +1,6 @@
 package br.com.api.models.utils;
 
-public enum Currency {
+public enum CurrencyEnum {
     REAL("Real"),
     DOLAR("Dólar"),
     LIBRA("Libra"),
@@ -8,7 +8,7 @@ public enum Currency {
 
     private String selectedCurrency;
 
-    Currency(String selectedCurrency) {
+    CurrencyEnum(String selectedCurrency) {
         this.selectedCurrency = selectedCurrency;
     }
 

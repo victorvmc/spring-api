@@ -1,6 +1,6 @@
 package br.com.api.models;
 
-import br.com.api.models.utils.Currency;
+import br.com.api.models.utils.CurrencyEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @NoArgsConstructor
 @Getter
@@ -24,10 +25,11 @@ public class Transfer implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Enumerated(EnumType.STRING)
-    private Currency currency;
-    private double amount;
+    private CurrencyEnum currency;
+    private Double amount;
     @CreationTimestamp
-    private LocalDateTime created_at;
+    @Temporal(TemporalType.DATE)
+    private Date date;
     @UpdateTimestamp
     private LocalDateTime updated_at;
 
@@ -36,7 +38,7 @@ public class Transfer implements Serializable {
 //    @JsonBackReference
     private Client client;
 
-    public Transfer(Currency currency, double amount, Client client) {
+    public Transfer(CurrencyEnum currency, double amount, Client client) {
         this.currency = currency;
         this.amount = amount;
         this.client = client;
