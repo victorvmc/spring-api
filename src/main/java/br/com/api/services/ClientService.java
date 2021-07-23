@@ -3,6 +3,8 @@ package br.com.api.services;
 import br.com.api.models.Client;
 import br.com.api.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +20,8 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
-    public List<Client> getClients() {
-        return clientRepository.findAll();
+    public Page<Client> getClients(Pageable pageable) {
+        return clientRepository.findAll(pageable);
     }
 
     public Client getClientById(Integer id) {

@@ -6,6 +6,10 @@ import br.com.api.models.Client;
 import br.com.api.services.ClientService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,10 +34,10 @@ public class ClientResource {
     }
 
     @GetMapping("/clients")
-    public ResponseEntity<List<ClientOutputDTO>> readClients() {
+    public ResponseEntity<List<ClientOutputDTO>> readClients(@PageableDefault(page = 0, size = 2, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
 
-        List<Client> clientsList = clientService.getClients();
-//        TODO to study
+        Page<Client> clientsList = clientService.getClients(pageable);
+
         return new ResponseEntity<>(clientsList.stream().map(ClientOutputDTO::new).collect(Collectors.toList()), HttpStatus.ACCEPTED);
     }
 
