@@ -1,6 +1,7 @@
 package br.com.api.services;
 
 import br.com.api.models.Client;
+import br.com.api.repositories.ClientCustomRepositoryImpl;
 import br.com.api.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,9 @@ public class ClientService {
 
     @Autowired
     ClientRepository clientRepository;
+
+    @Autowired
+    ClientCustomRepositoryImpl clientCustomRepository;
 
     public Client createClient(Client client) {
         return clientRepository.save(client);
@@ -41,7 +45,7 @@ public class ClientService {
         return clientRepository.findByNameContainingIgnoreCase(name);
     }
 
-    public Client getClientbyName(String name) {
-        return clientRepository.findByNameContainingIgnoreCase(name);
+    public List<Client> getClientCriteria(Integer id, String name, String lastName) {
+        return clientCustomRepository.searchClientCriteria(id, name, lastName);
     }
 }

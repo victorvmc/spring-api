@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("transfer")
 public class TransferResource {
 
     @Autowired
@@ -33,7 +33,7 @@ public class TransferResource {
     @Autowired
     private TransferCustomRepositoryImpl transferCustomRepositoryImpl;
 
-    @PostMapping("/transfer")
+    @PostMapping("")
     public ResponseEntity<TransferOutputDTO> createTransfer(@RequestBody TransferInputDTO transferInputDTO) {
 
         Transfer transfer = transferService
@@ -42,7 +42,7 @@ public class TransferResource {
         return new ResponseEntity<>(new TransferOutputDTO(transfer), HttpStatus.CREATED);
     }
 
-    @GetMapping("/transfer")
+    @GetMapping("")
     public ResponseEntity<List<TransferOutputDTO>> readTransfer() {
 
         List<Transfer> transfers = transferService.getTransfers();
@@ -50,15 +50,30 @@ public class TransferResource {
         return new ResponseEntity<>(transfers.stream().map(TransferOutputDTO::new).collect(Collectors.toList()), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/transfer/{id}")
+    @GetMapping("search")
+    public ResponseEntity<List<TransferOutputDTO>> readTransferByCriteria(
+            @RequestParam(value = "id", required = false) Integer id,
+            @RequestParam(value = "amount", required = false) Double amount,
+            @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
+            @RequestParam(value = "currency", required = false) CurrencyEnum currency) {
+
+        List<Transfer> transferList = transferService.getTransferCriteria(id, amount, date, currency);
+
+        return new ResponseEntity<>(transferList.stream().map(TransferOutputDTO::new).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("search/id/{id}")
     public ResponseEntity<TransferOutputDTO> readTransferById(@PathVariable("id") Integer id) {
 
         Transfer transferById = transferService.getTransferById(id);
 
-        return new ResponseEntity<>(new TransferOutputDTO(transferById), HttpStatus.ACCEPTED);
+        if (transferById != null)
+            return new ResponseEntity<>(new TransferOutputDTO(transferById), HttpStatus.ACCEPTED);
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/transfer/client/id/{id}")
+    @GetMapping("search/clientId/{id}")
     public ResponseEntity<List<TransferOutputDTO>> readTransferByClientId(@PathVariable("id") Integer id) {
 
         Client clientById = clientService.getClientById(id);
@@ -67,7 +82,7 @@ public class TransferResource {
         return new ResponseEntity<>(transferListByClientId.stream().map(TransferOutputDTO::new).collect(Collectors.toList()), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/transfer/client/name/{name}")
+    @GetMapping("search/clientName/{name}")
     public ResponseEntity<List<TransferOutputDTO>> readTransferByClientName(@PathVariable("name") String name) {
 
         Client clientByName = clientService.getClientByName(name);
@@ -76,7 +91,7 @@ public class TransferResource {
         return new ResponseEntity<>(transferListByClientName.stream().map(TransferOutputDTO::new).collect(Collectors.toList()), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/transfer/date/{date}")
+    @GetMapping("search/date/{date}")
     public ResponseEntity<List<TransferOutputDTO>> readTransferByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
 
         List<Transfer> transferList = transferService.getTransferByDate(date);
@@ -84,8 +99,8 @@ public class TransferResource {
         return new ResponseEntity<>(transferList.stream().map(TransferOutputDTO::new).collect(Collectors.toList()), HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/transfer/query")
-    public List<TransferOutputDTO> readTransferByQuery(
+    @GetMapping("query")
+    public ResponseEntity<List<TransferOutputDTO>>  readTransferByQuery(
             @RequestParam(value = "id", required = false) Integer id,
             @RequestParam(value = "amount", required = false) Double amount,
             @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
@@ -93,18 +108,6 @@ public class TransferResource {
 
         List<Transfer> transferList = transferService.getTransferCustom(id, amount, date, currency);
 
-        return transferList.stream().map(TransferOutputDTO::new).collect(Collectors.toList());
-    }
-
-    @GetMapping("/transfer/criteria/")
-    public List<TransferOutputDTO> readTransferByCriteria(
-            @RequestParam(value = "id", required = false) Integer id,
-            @RequestParam(value = "amount", required = false) Double amount,
-            @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
-            @RequestParam(value = "currency", required = false) CurrencyEnum currency) {
-
-        List<Transfer> transferList = transferService.getTransferCriteria(id, amount, date, currency);
-
-        return transferList.stream().map(TransferOutputDTO::new).collect(Collectors.toList());
+        return new ResponseEntity<>(transferList.stream().map(TransferOutputDTO::new).collect(Collectors.toList()), HttpStatus.OK);
     }
 }

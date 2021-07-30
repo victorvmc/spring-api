@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @RestController
-@RequestMapping(value = "/api")
+@RequestMapping("client")
 public class ClientResource {
 
     @Autowired
     private ClientService clientService;
 
-    @PostMapping("/client")
+    @PostMapping("")
     public ResponseEntity<ClientOutputDTO> createClient(@RequestBody ClientInputDTO clientInputDTO) {
 
         Client clientSaved = clientService.createClient(new Client(clientInputDTO.getName(), clientInputDTO.getLastName()));
@@ -33,23 +33,40 @@ public class ClientResource {
         return new ResponseEntity<>(new ClientOutputDTO(clientSaved), HttpStatus.CREATED);
     }
 
-    @GetMapping("/clients")
-    public ResponseEntity<List<ClientOutputDTO>> readClients(@PageableDefault(page = 0, size = 2, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+    @GetMapping("")
+    public ResponseEntity<List<ClientOutputDTO>> readClients(@PageableDefault(page = 0, size = 5, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
 
         Page<Client> clientsList = clientService.getClients(pageable);
 
-        return new ResponseEntity<>(clientsList.stream().map(ClientOutputDTO::new).collect(Collectors.toList()), HttpStatus.ACCEPTED);
+        if (clientsList.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(clientsList.stream().map(ClientOutputDTO::new).collect(Collectors.toList()), HttpStatus.OK);
     }
 
-    @GetMapping("/client/{id}")
+    @GetMapping("search")
+    public ResponseEntity<List<ClientOutputDTO>> readClientByCriteria(
+            @RequestParam(value = "id", required = false) Integer id,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "lastName", required = false) String lastName) {
+
+        List<Client> clientList = clientService.getClientCriteria(id, name, lastName);
+
+        return new ResponseEntity<>(clientList.stream().map(ClientOutputDTO::new).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("id/{id}")
     public ResponseEntity<ClientOutputDTO> readClient(@PathVariable("id") Integer id) {
 
         Client clientById = clientService.getClientById(id);
 
-        return new ResponseEntity<>(new ClientOutputDTO(clientById), HttpStatus.ACCEPTED);
+        if (clientById != null)
+            return new ResponseEntity<>(new ClientOutputDTO(clientById), HttpStatus.ACCEPTED);
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/client/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<ClientOutputDTO> updateClient(@PathVariable("id") Integer id, @RequestBody ClientInputDTO clientUpdateDTO) {
 
         Client clientUpdated = clientService.updateClient(new Client(id, clientUpdateDTO.getName(), clientUpdateDTO.getLastName()));
@@ -57,14 +74,15 @@ public class ClientResource {
         return new ResponseEntity<>(new ClientOutputDTO(clientUpdated), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/client/{id}")
+    @DeleteMapping("{id}")
     public void deleteClient(@PathVariable("id") Integer id) {
         clientService.deleteClient(id);
     }
 
-    @GetMapping("/client/name/{name}")
+    @GetMapping("name/{name}")
     public ResponseEntity<ClientOutputDTO> getClientByName(@PathVariable("name") String name) {
-        return new ResponseEntity<>(new ClientOutputDTO(clientService.getClientByName(name)), HttpStatus.ACCEPTED);
+
+        return new ResponseEntity<>(new ClientOutputDTO(clientService.getClientByName(name)), HttpStatus.OK);
     }
 
 }
